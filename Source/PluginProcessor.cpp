@@ -14,7 +14,13 @@ AMRVibesAudioProcessor::AMRVibesAudioProcessor():AudioProcessor(BusesProperties(
 AMRVibesAudioProcessor::~AMRVibesAudioProcessor(){}
 void AMRVibesAudioProcessor::prepareToPlay(double sr,int){sampleRate=sr;}
 void AMRVibesAudioProcessor::releaseResources(){}
-bool AMRVibesAudioProcessor::isBusesLayoutSupported(const BusesLayout& l)const{return l.getMainInputChannelSet()!=juce::AudioChannelSet::disabled();}
+bool AMRVibesAudioProcessor::isBusesLayoutSupported(const BusesLayout& l) const
+{
+ auto in=l.getMainInputChannelSet(); auto out=l.getMainOutputChannelSet();
+ const bool inputOk=in==juce::AudioChannelSet::mono()||in==juce::AudioChannelSet::stereo();
+ const bool outputOk=out==juce::AudioChannelSet::stereo()||out==juce::AudioChannelSet::mono();
+ return inputOk&&outputOk;
+}
 void AMRVibesAudioProcessor::processBlock(juce::AudioBuffer<float>& b,juce::MidiBuffer& m){
  juce::ScopedNoDenormals no; m.clear();
  if(isRecording.load()){const int n=b.getNumSamples(); juce::ScopedLock lock(mutex); int old=audio.getNumSamples(); audio.setSize(1,old+n,true); const float* l=b.getReadPointer(0); const float* r=b.getNumChannels()>1?b.getReadPointer(1):l; float* d=audio.getWritePointer(0,old); for(int i=0;i<n;++i)d[i]=0.5f*(l[i]+r[i]); if(audio.getNumSamples()>(int)(sampleRate*120.0))isRecording=false;}
