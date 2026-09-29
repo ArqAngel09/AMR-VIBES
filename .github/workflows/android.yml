@@ -44,7 +44,7 @@ jobs:
           PROJUCER=$(find juce-build -type f -name Projucer -perm -111 | head -n 1)
           test -n "$PROJUCER"
           set +e
-          "$PROJUCER" --resave AMR-VIBES.jucer --fix-missing-dependencies 2>&1 | tee projucer.log
+          "$PROJUCER" --resave AMR-VIBES.jucer --fix-missing-dependencies --fix-missing-dependencies 2>&1 | tee projucer.log
           status=${PIPESTATUS[0]}
           if [ $status -ne 0 ]; then exit $status; fi
           test -f Builds/Android/app/build.gradle
@@ -57,10 +57,9 @@ jobs:
 
       - name: Diagnose Android build
         if: failure()
-        working-directory: Builds/Android
         run: |
           echo "===== Gradle error summary ====="
-          grep -E "FAILED|FAILURE|error:|Error:|What went wrong|Execution failed" android-build.log | tail -n 120 || true
+          grep -E "FAILED|FAILURE|error:|Error:|What went wrong|Execution failed" Builds/Android/android-build.log | tail -n 120 || true
 
       - name: Upload build log on failure
         if: failure()
