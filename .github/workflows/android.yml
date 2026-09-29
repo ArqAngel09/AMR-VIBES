@@ -1,0 +1,66 @@
+name: Build Android APK
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'Source/**'
+      - 'AMR-VIBES.jucer'
+      - '.github/workflows/android.yml'
+  workflow_dispatch:
+
+jobs:
+  build-android:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Linux build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libasound2-dev libgtk-3-dev libwebkit2gtk-4.1-dev libcurl4-openssl-dev
+
+      - name: Install Android SDK/NDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install Android packages
+        run: |
+          sdkmanager "platform-tools" "platforms;android-35" "build-tools;35.0.0" "ndk;27.2.12479018"
+
+      - name: Clone JUCE 9.0.2
+        run: git clone --depth 1 --branch 9.0.2 https://github.com/juce-framework/JUCE.git JUCE
+
+      - name: Build Projucer
+        run: |
+          cmake -S JUCE -B juce-build -DJUCE_BUILD_EXAMPLES=OFF -DJUCE_BUILD_EXTRAS=ON
+          cmake --build juce-build --target Projucer --config Release --parallel 2
+
+      - name: Generate Android Studio project
+        shell: bash
+        run: |
+          PROJUCER=$(find juce-build -type f -name Projucer -perm -111 | head -n 1)
+          test -n "$PROJUCER"
+          "$PROJUCER" --resave AMR-VIBES.jucer
+          test -f Builds/Android/app/build.gradle
+
+      - name: Build release APK
+        working-directory: Builds/Android
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleRelease --no-daemon --stacktrace
+
+      - name: Package APK
+        shell: bash
+        run: |
+          mkdir -p dist
+          APK=$(find Builds/Android/app/build/outputs/apk/release -type f -name "*.apk" | head -n 1)
+          test -n "$APK"
+          cp "$APK" dist/AMR-VIBES-Android.apk
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: AMR-VIBES-Android
+          path: dist/AMR-VIBES-Android.apk
+          if-no-files-found: error
