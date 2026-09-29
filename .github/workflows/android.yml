@@ -71,8 +71,9 @@ jobs:
         shell: bash
         run: |
           mkdir -p dist
-          APK=$(find Builds/Android/app/build/outputs/apk/release -type f -name "*.apk" | head -n 1)
+          APK=$(find Builds/Android -type f -name "*.apk" | head -n 1)
           test -n "$APK"
+          echo "APK found at: $APK"
           cp "$APK" dist/AMR-VIBES-Android.apk
 
       - name: Upload APK
