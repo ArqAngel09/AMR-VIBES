@@ -1,7 +1,7 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 
-AMRVibesAudioProcessor::AMRVibesAudioProcessor():AudioProcessor(BusesProperties().withInput("Input",juce::AudioChannelSet::stereo(),true).withOutput("Output",juce::AudioChannelSet::stereo(),true)){
+AMRVibesAudioProcessor::AMRVibesAudioProcessor():AudioProcessor(BusesProperties().withInput("Input",juce::AudioChannelSet::stereo(),true).withOutput("Output",juce::AudioChannelSet::stereo(),true)), apvts(*this, nullptr, "PARAMETERS", {}){
  formatManager.registerBasicFormats();
  apvts.createAndAddParameter("root","Root","Root",juce::NormalisableRange<float>(0,11,1),0,{},nullptr);
  apvts.createAndAddParameter("scale","Scale","Scale",juce::NormalisableRange<float>(0,2,1),0,{},nullptr);
