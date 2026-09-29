@@ -50,7 +50,18 @@ jobs:
         working-directory: Builds/Android
         run: |
           chmod +x gradlew
-          ./gradlew assembleRelease --no-daemon --stacktrace
+          set +e
+          ./gradlew assembleRelease --no-daemon --stacktrace 2>&1 | tee android-build.log
+          status=${PIPESTATUS[0]}
+          exit $status
+
+      - name: Upload build log on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: AMR-VIBES-Android-build-log
+          path: Builds/Android/android-build.log
+          if-no-files-found: warn
 
       - name: Package APK
         shell: bash
