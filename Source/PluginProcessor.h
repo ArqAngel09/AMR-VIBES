@@ -26,6 +26,7 @@ private:
  int fitPitchClass(int pc) const;
  juce::AudioProcessorValueTreeState apvts;
  juce::AudioFormatManager formatManager; juce::AudioSampleBuffer audio; juce::MidiMessageSequence sequence;
+ std::unique_ptr<juce::FileChooser> fileChooser;
  juce::CriticalSection mutex; std::atomic<bool> isRecording{false}; std::atomic<bool> analyzing{false};
  double sampleRate=44100; juce::String statusText="Ready"; juce::File lastMidi;
  JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(AMRVibesAudioProcessor)
