@@ -2,7 +2,7 @@
 AMRVibesAudioProcessorEditor::AMRVibesAudioProcessorEditor(AMRVibesAudioProcessor& x):AudioProcessorEditor(&x),p(x){
  setSize(620,420);
  for(auto* b:{&load,&record,&analyze,&clear,&exportBtn}){addAndMakeVisible(b);}
- load.onClick=[this]{p.loadAudio();}; record.onClick=[this]{p.toggleRecording();}; analyze.onClick=[this]{p.analyze();}; clear.onClick=[this]{analyze.setEnabled(true);};
+ load.onClick=[this]{p.loadAudio();}; record.onClick=[this]{p.toggleRecording();}; analyze.onClick=[this]{p.analyze();}; clear.onClick=[this]{p.clearAudio();};
  exportBtn.onClick=[this]{p.exportMidi();};
  addAndMakeVisible(root); const char* roots[]={"C","C#","D","D#","E","F","F#","G","G#","A","A#","B"};for(auto s:roots)root.addItem(s,root.getNumItems()+1);root.setSelectedId(1);root.onChange=[this]{p.params().getParameter("root")->setValueNotifyingHost((root.getSelectedId()-1)/11.0f);};
  addAndMakeVisible(scale);scale.addItem("Major",1);scale.addItem("Minor",2);scale.addItem("Chromatic",3);scale.setSelectedId(1);scale.onChange=[this]{p.params().getParameter("scale")->setValueNotifyingHost((scale.getSelectedId()-1)/2.0f);};
