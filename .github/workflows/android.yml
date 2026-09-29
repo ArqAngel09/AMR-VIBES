@@ -44,7 +44,7 @@ jobs:
           PROJUCER=$(find juce-build -type f -name Projucer -perm -111 | head -n 1)
           test -n "$PROJUCER"
           set +e
-          "$PROJUCER" --resave --fix-missing-dependencies AMR-VIBES.jucer 2>&1 | tee projucer.log
+          "$PROJUCER" --resave AMR-VIBES.jucer --fix-missing-dependencies 2>&1 | tee projucer.log
           status=${PIPESTATUS[0]}
           if [ $status -ne 0 ]; then exit $status; fi
           test -f Builds/Android/app/build.gradle
