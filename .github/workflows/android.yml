@@ -71,12 +71,23 @@ jobs:
             projucer.log
           if-no-files-found: warn
 
+      - name: Locate APK
+        shell: bash
+        run: |
+          echo "===== Android output tree ====="
+          find Builds/Android/app/build/outputs -maxdepth 6 -type f -print || true
+          echo "===== All APKs ====="
+          find . -type f -name "*.apk" -print || true
+
       - name: Package APK
         shell: bash
         run: |
           mkdir -p dist
-          APK=$(find Builds/Android -type f -name "*.apk" | head -n 1)
-          test -n "$APK"
+          APK=$(find . -type f -name "*.apk" -print -quit)
+          if [ -z "$APK" ]; then
+            echo "No APK found after successful Gradle build."
+            exit 1
+          fi
           echo "APK found at: $APK"
           cp "$APK" dist/AMR-VIBES-Android.apk
 
