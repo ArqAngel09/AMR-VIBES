@@ -50,10 +50,14 @@ jobs:
         working-directory: Builds/Android
         run: |
           chmod +x gradlew
-          set +e
-          ./gradlew assembleRelease --no-daemon --stacktrace 2>&1 | tee android-build.log
-          status=${PIPESTATUS[0]}
-          exit $status
+          ./gradlew assembleRelease --no-daemon --stacktrace --info 2>&1 | tee android-build.log
+
+      - name: Diagnose Android build
+        if: failure()
+        working-directory: Builds/Android
+        run: |
+          echo "===== Gradle error summary ====="
+          grep -E "FAILED|FAILURE|error:|Error:|What went wrong|Execution failed" android-build.log | tail -n 120 || true
 
       - name: Upload build log on failure
         if: failure()
