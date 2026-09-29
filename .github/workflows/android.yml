@@ -89,7 +89,7 @@ jobs:
         run: |
           echo "===== Android output tree ====="
           find Builds/Android/app/build/outputs -maxdepth 6 -type f -print || true
-          APK=$(find Builds/Android/app/build/outputs -type f -name "*.apk" -print -quit)
+          APK=$(find . -type f -name "*.apk" -print -quit)
           if [ -z "$APK" ]; then
             echo "No APK found after successful Gradle build."
             exit 1
