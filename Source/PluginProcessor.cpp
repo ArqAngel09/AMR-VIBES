@@ -37,6 +37,7 @@ void AMRVibesAudioProcessor::analyzeBuffer(juce::AudioSampleBuffer x,double sr){
  out.updateMatchedPairs(); {juce::ScopedLock l(mutex);sequence=out;} statusText="Conversion complete"; analyzing=false;
 }
 bool AMRVibesAudioProcessor::exportMidi(){juce::MidiFile f;f.setTicksPerQuarterNote(480);f.addTrack(sequence);juce::FileChooser c("Export MIDI",juce::File::getSpecialLocation(juce::File::userDocumentsDirectory).getChildFile("AMR-VIBES.mid"),"*.mid");if(!c.browseForFileToSave(true))return false;juce::FileOutputStream s(c.getResult());if(!s.openedOk())return false;f.writeTo(s);statusText="MIDI exported";return true;}
+void AMRVibesAudioProcessor::clearAudio(){juce::ScopedLock l(mutex);audio.setSize(1,0);sequence.clear();statusText="Cleared";}
 juce::String AMRVibesAudioProcessor::status()const{return statusText;}
 void AMRVibesAudioProcessor::timerCallback(){}
 void AMRVibesAudioProcessor::getStateInformation(juce::MemoryBlock& d){auto x=apvts.copyState();std::unique_ptr<juce::XmlElement> e=x.createXml();copyXmlToBinary(*e,d);}
