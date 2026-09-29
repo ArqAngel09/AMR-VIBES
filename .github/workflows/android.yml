@@ -72,28 +72,22 @@ jobs:
           if-no-files-found: warn
 
       - name: Locate APK
+        id: locate_apk
         shell: bash
         run: |
           echo "===== Android output tree ====="
           find Builds/Android/app/build/outputs -maxdepth 6 -type f -print || true
-          echo "===== All APKs ====="
-          find . -type f -name "*.apk" -print || true
-
-      - name: Package APK
-        shell: bash
-        run: |
-          mkdir -p dist
-          APK=$(find . -type f -name "*.apk" -print -quit)
+          APK=$(find Builds/Android/app/build/outputs -type f -name "*.apk" -print -quit)
           if [ -z "$APK" ]; then
             echo "No APK found after successful Gradle build."
             exit 1
           fi
           echo "APK found at: $APK"
-          cp "$APK" dist/AMR-VIBES-Android.apk
+          echo "apk_path=$APK" >> "$GITHUB_OUTPUT"
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: AMR-VIBES-Android
-          path: dist/AMR-VIBES-Android.apk
+          path: ${{ steps.locate_apk.outputs.apk_path }}
           if-no-files-found: error
