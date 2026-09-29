@@ -53,7 +53,7 @@ jobs:
         working-directory: Builds/Android
         run: |
           chmod +x gradlew
-          ./gradlew assembleRelease --no-daemon --stacktrace --info 2>&1 | tee android-build.log
+          ./gradlew :app:assembleRelease_Release --no-daemon --stacktrace --info 2>&1 | tee android-build.log
 
       - name: Diagnose Android build
         if: failure()
