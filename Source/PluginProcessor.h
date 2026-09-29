@@ -17,7 +17,7 @@ public:
  int getNumPrograms() override { return 1; } int getCurrentProgram() override { return 0; }
  void setCurrentProgram(int) override {} const juce::String getProgramName(int) override { return {}; } void changeProgramName(int,const juce::String&) override {}
  void getStateInformation(juce::MemoryBlock&) override; void setStateInformation(const void*,int) override;
- void loadAudio(); void toggleRecording(); void analyze(); bool exportMidi();
+ void loadAudio(); void toggleRecording(); void analyze(); bool exportMidi(); void clearAudio();
  juce::String status() const; bool recording() const { return isRecording.load(); }
  juce::AudioProcessorValueTreeState& params() { return apvts; }
 private:
