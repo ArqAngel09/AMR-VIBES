@@ -9,7 +9,8 @@
                    androidMinimumSDK="24" androidTargetSDK="35"
                    microphonePermissionNeeded="1" androidInternetNeeded="0"
                    androidReadMediaAudioPermission="1" androidExternalWriteNeeded="0"
-                   androidVersionCode="1">
+                   androidVersionCode="1"
+                   androidCustomAppBuildGradleContent="ndkVersion &quot;27.3.13750724&quot;">
       <CONFIGURATIONS>
         <CONFIGURATION isDebug="1" name="Debug" targetName="AMRVibes" recommendedWarnings="LLVM"/>
         <CONFIGURATION isDebug="0" name="Release" targetName="AMRVibes"
