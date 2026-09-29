@@ -12,6 +12,9 @@ on:
 jobs:
   build-android:
     runs-on: ubuntu-latest
+    env:
+      ANDROID_HOME: /usr/local/lib/android/sdk
+      ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -21,11 +24,9 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y libasound2-dev libgtk-3-dev libwebkit2gtk-4.1-dev libcurl4-openssl-dev
 
-      - name: Install Android SDK/NDK
-        uses: android-actions/setup-android@v3
-
       - name: Install Android packages
         run: |
+          yes | sdkmanager --licenses >/dev/null || true
           sdkmanager "platform-tools" "platforms;android-35" "build-tools;35.0.0" "ndk;27.2.12479018"
 
       - name: Clone JUCE 9.0.2
