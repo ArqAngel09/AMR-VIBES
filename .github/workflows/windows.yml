@@ -9,9 +9,9 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Configure
-      run: cmake -S . -B build -G "Visual Studio 17 2022" -A x64
+      run: cmake -S . -B build -G "Visual Studio 18 2026" -A x64
     - name: Build
-      run: cmake --build build --config Release
+      run: cmake --build build --config Release --parallel
     - name: Package
       shell: pwsh
       run: |
@@ -24,3 +24,4 @@ jobs:
       with:
         name: AMR-VIBES-Windows
         path: AMR-VIBES-Windows.zip
+        if-no-files-found: error
